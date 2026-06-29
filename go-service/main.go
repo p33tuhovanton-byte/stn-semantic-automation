@@ -7,7 +7,6 @@ import (
 	 "net/http"
 	 "os"
 	 "strings"
-  "go-sercice"
 )
 
 // Структура для автоматического ответа
