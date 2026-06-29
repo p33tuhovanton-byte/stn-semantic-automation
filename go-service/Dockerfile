@@ -4,15 +4,16 @@ WORKDIR /app
 # Копируем исходный код
 COPY . .
 
-# ЖЕСТКАЯ НАСТРОЙКА ОКРУЖЕНИЯ (ENVIRONMENT):
-# Стираем любой старый go.mod и записываем чистый конфиг из 3 строк напрямую
+# Принудительно очищаем старые файлы и создаем чистый базовый модуль (2 строки)
 RUN rm -f go.mod go.sum && \
     echo "module go-service" > go.mod && \
-    echo "go 1.23" >> go.mod && \
-    echo "require ://github.com v1.2.0" >> go.mod
+    echo "go 1.23" >> go.mod
 
-# Теперь окружение чистое, запускаем сборку зависимостей и компиляцию
-RUN go mod download && go build -o main .
+# Официальный и безопасный способ добавить зависимость в окружение
+RUN go get ://github.com && go mod download
+
+# Компилируем готовый проект
+RUN go build -o main .
 
 FROM alpine:latest
 WORKDIR /app
