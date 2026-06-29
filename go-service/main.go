@@ -8,7 +8,7 @@ import (
 	"os"
 	"strings"
 
-	"://github.com"
+	"//github.com"
 )
 
 // Структура для автоматического ответа
