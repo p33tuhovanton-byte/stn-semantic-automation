@@ -1,34 +1,30 @@
-name: STN Семантический CI Конвейер
+name: STN-Ecosystem-CI
 
-on:  
-push:  
-branches: [ "main" ]  
-pull_request:  
-branches: [ "main" ]
+on:
+  push:
+    branches: [ main ]
+  pull_request:
+    branches: [ main ]
 
-jobs:  
-test-ecosystem:  
-runs-on: ubuntu-latest
+jobs:
+  integration-tests:
+    runs-on: ubuntu-latest
 
-steps:  
-# 1. Скачиваем актуальный код проекта из репозитория GitHub  
-- name: Checkout repository  
-uses: actions/checkout@v4
+    steps:
+    - name: Fetch source code
+      uses: actions/checkout@v4
 
-# 2. Разворачиваем все 4 сервиса одной командой через современный Docker Compose V2  
-- name: Build and start STN nodes  
-run: docker compose up --build -d
+    - name: Initialize Docker infrastructure
+      run: docker compose up --build -d
 
-# 3. Ожидаем 15 секунд для полной инициализации серверов внутри контейнеров  
-- name: Wait for services initialization  
-run: sleep 15
+    - name: Await nodes readiness
+      run: sleep 15
 
-# 4. Запускаем наш мультиязычный Bash-скрипт сквозного тестирования  
-- name: Run automated validation tests (test_all.sh)  
-run: |  
-chmod +x test_all.sh  
-./test_all.sh
+    - name: Execute validation pipeline
+      run: |
+        chmod +x test_all.sh
+        ./test_all.sh
 
-# 5. Корректно останавливаем и очищаем контейнеры после завершения тестов  
-- name: Shutdown STN nodes  
-run: docker compose down
+    - name: Terminate infrastructure
+      if: always()
+      run: docker compose down
