@@ -1,26 +1,24 @@
-# --- ЭТАП 1: Bash-скрипт очистки окружения ---
-FROM alpine:latest AS sanitizer
-WORKDIR /src
-COPY . .
-RUN apk add --no-cache bash sed && \
-    echo "🤖 Исправление кода внутри контейнера..." && \
-    # Принудительно заменяем ошибочную строку в коде или конфигах, если они скопировались
-    find . -type f -exec sed -i 's|go get ://github.com|go get ://github.com|g' {} + && \
-    rm -f go.mod go.sum
-
-# --- ЭТАП 2: Чистая сборка Go ---
 FROM golang:1.23-alpine AS builder
-WORKDIR /app
-# Копируем очищенные файлы из первого этапа
-COPY --from=sanitizer /src .
-# Инициализируем правильный пакет и скачиваем зависимость
-RUN go mod init go-service && \
-    go get ://github.com && \
-    go mod tidy && \
-    go build -o main .
+# Настраиваем рабочую папку в точном соответствии с вашим репозиторием
+WORKDIR /go/src/://github.com
 
-# --- ЭТАП 3: Финальный легковесный образ ---
+# Копируем исходный код проекта
+COPY . .
+
+# Полный автоматизм настройки окружения:
+# 1. Стираем старые конфликтующие конфигурации
+# 2. Инициализируем модуль по вашему пути на GitHub
+# 3. Скачиваем официальный пакет валидации
+# 4. Фиксируем и очищаем зависимости
+RUN rm -f go.mod go.sum && \
+    go mod init ://github.com && \
+    go get ://github.com && \
+    go mod tidy
+
+# Компилируем чистый бинарный файл
+RUN go build -o main .
+
 FROM alpine:latest
 WORKDIR /app
-COPY --from=builder /app/main .
+COPY --from=builder /go/src/://github.com/main .
 CMD ["./main"]
