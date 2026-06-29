@@ -18,8 +18,8 @@ jobs:
     - name: Fix Dockerfile syntax error on the fly
       run: sed -i 's|go get ://github.com|go get ://github.com|g' go-service/Dockerfile
 
-      - name: Build and push Docker images
-        run: docker build -t go-node ./go-service
+    - name: Build and push Docker images
+      run: docker build -t go-node ./go-service
 
     - name: Initialize Docker infrastructure
       run: docker compose up --build -d
