@@ -4,12 +4,12 @@ WORKDIR /app
 # Копируем исходный код проекта
 COPY . .
 
-# Сброс кэша сборщика (уникальный маркер времени сборки)
-RUN echo "Сборка от 2026-06-29"
+# Принудительный сброс кэша сборщика
+RUN echo "Сборка ядра СТН"
 
-# Каждый шаг выполняем отдельно, чтобы Docker физически не смог подставить старый кэш
+# Выполняем шаги строго без двоеточий
 RUN rm -f go.mod go.sum
-RUN go mod init ://github.com
+RUN go mod init go-service
 RUN go get ://github.com
 RUN go mod tidy
 
