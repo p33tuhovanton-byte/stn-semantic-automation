@@ -1,10 +1,10 @@
 FROM golang:1.23-alpine AS builder
 WORKDIR /app
 COPY go.mod ./
-RUN go mod tidy
+# Скачиваем указанный в файле модуль напрямую
+RUN go download ://github.com v1.2.0 || go mod download
 COPY . .
-# Добавляем принудительный запуск сборки с автоматической загрузкой
-RUN go build -mod=mod -o main .
+RUN go build -o main .
 
 FROM alpine:latest
 WORKDIR /app
