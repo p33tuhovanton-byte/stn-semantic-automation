@@ -7,7 +7,7 @@ import (
 	 "net/http"
 	 "os"
 	 "strings"
-  "go-service"
+  "://github.com"
 )
 
 // Структура для автоматического ответа
