@@ -1,15 +1,14 @@
 FROM golang:1.23-alpine AS builder
 WORKDIR /app
 
-# Инициализируем чистый модуль Go прямо внутри контейнера
-RUN go mod init go-service && \
-    go get ://github.com
+# Инициализируем чистый модуль
+RUN go mod init go-service
 
-# Копируем исходный код
+# Копируем исходный код (включая main.go с импортами)
 COPY . .
 
-# Собираем исполняемый файл
-RUN go build -o main .
+# Собираем — Go автоматически найдет импорты в коде и скачает их
+RUN go build -mod=mod -o main .
 
 FROM alpine:latest
 WORKDIR /app
