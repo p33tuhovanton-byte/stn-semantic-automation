@@ -1,15 +1,20 @@
 FROM golang:1.23-alpine AS builder
 WORKDIR /app
 
-# Копируем исходный код проекта
+# Копируем все файлы проекта
 COPY . .
 
-# Принудительно очищаем старые конфиги и создаем чистый модуль
-RUN rm -f go.mod go.sum && go mod init go-service
+# 1. Стираем старый кэш
+# 2. Создаем модуль go-service
+# 3. Принудительно скачиваем библиотеку валидации
+# 4. Жестко фиксируем связи в манифесте модуля
+RUN rm -f go.mod go.sum && \
+    go mod init go-service && \
+    go get ://github.com && \
+    go mod tidy
 
-# Запускаем сборку — флаг -mod=mod заставит Go автоматически 
-# найти импорт gojsonschema в коде, скачать его и скомпилировать бинарник
-RUN go build -mod=mod -o main .
+# Собираем готовый исполняемый файл
+RUN go build -o main .
 
 FROM alpine:latest
 WORKDIR /app
