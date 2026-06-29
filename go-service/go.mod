@@ -1,3 +1,3 @@
 module go-service
 
-go 1.62
+go 1.22
