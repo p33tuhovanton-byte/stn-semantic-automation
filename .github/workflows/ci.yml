@@ -17,12 +17,12 @@ jobs:
    - name: Recreate Go Dockerfile Bash Script
      shell: bash
      run: |
-          echo "🤖 Запуск Bash-скрипта очистки окружения..."
+       echo "🤖 Запуск Bash-скрипта очистки окружения..."
           
-          # 1. Полностью удаляем старый файл, если он скопировался
+       # 1. Полностью удаляем старый файл, если он скопировался
           rm -f go-service/Dockerfile
           
-          # 2. Генерируем абсолютно новый Dockerfile с правильным путем библиотеки
+       # 2. Генерируем абсолютно новый Dockerfile с правильным путем библиотеки
           cat << 'EOF' > go-service/Dockerfile
           FROM golang:1.23-alpine AS builder
           WORKDIR /app
@@ -40,6 +40,7 @@ jobs:
           EOF
           
           echo "✅ Новый Dockerfile
+
     - name: Fix Dockerfile syntax error on the fly
       run: sed -i 's|go get ://github.com|go get ://github.com|g' go-service/Dockerfile
 
