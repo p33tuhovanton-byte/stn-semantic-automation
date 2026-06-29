@@ -10,7 +10,7 @@ RUN rm -f go.mod go.sum && \
     echo "go 1.23" >> go.mod
 
 # Официальный и безопасный способ добавить зависимость в окружение
-RUN go get ://github.com && go mod download
+RUN go get github.com && go mod download
 
 # Компилируем готовый проект
 RUN go build -o main .
