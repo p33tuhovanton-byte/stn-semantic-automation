@@ -14,7 +14,7 @@ jobs:
     - name: Fetch source code
       uses: actions/checkout@v4
 
-   - name: Recreate Go Dockerfile via Bash Script
+   - name: Recreate Go Dockerfile Bash Script
      shell: bash
      run: |
           echo "🤖 Запуск Bash-скрипта очистки окружения..."
