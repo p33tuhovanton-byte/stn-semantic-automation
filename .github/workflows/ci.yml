@@ -15,8 +15,8 @@ jobs:
       uses: actions/checkout@v4
 
 
-            - name: Fix Dockerfile syntax error on the fly
-        run: sed -i 's|go get ://github.com|go get ://github.com|g' go-service/Dockerfile
+    - name: Fix Dockerfile syntax error on the fly
+      run: sed -i 's|go get ://github.com|go get ://github.com|g' go-service/Dockerfile
 
       - name: Build and push Docker images
         run: docker build -t go-node ./go-service
