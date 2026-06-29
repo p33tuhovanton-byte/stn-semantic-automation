@@ -14,7 +14,32 @@ jobs:
     - name: Fetch source code
       uses: actions/checkout@v4
 
-
+   - name: Recreate Go Dockerfile via Bash Script
+     shell: bash
+     run: |
+          echo "🤖 Запуск Bash-скрипта очистки окружения..."
+          
+          # 1. Полностью удаляем старый файл, если он скопировался
+          rm -f go-service/Dockerfile
+          
+          # 2. Генерируем абсолютно новый Dockerfile с правильным путем библиотеки
+          cat << 'EOF' > go-service/Dockerfile
+          FROM golang:1.23-alpine AS builder
+          WORKDIR /app
+          COPY . .
+          RUN rm -f go.mod go.sum && \
+              go mod init go-service && \
+              go get ://github.com && \
+              go mod tidy
+          RUN go build -o main .
+          
+          FROM alpine:latest
+          WORKDIR /app
+          COPY --from=builder /app/main .
+          CMD ["./main"]
+          EOF
+          
+          echo "✅ Новый Dockerfile
     - name: Fix Dockerfile syntax error on the fly
       run: sed -i 's|go get ://github.com|go get ://github.com|g' go-service/Dockerfile
 
