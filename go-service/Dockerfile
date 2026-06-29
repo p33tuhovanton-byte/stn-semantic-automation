@@ -1,24 +1,17 @@
 FROM golang:1.23-alpine AS builder
-# Задаем стандартную рабочую директорию в окружении Go
-WORKDIR /go/src/go-service
+WORKDIR /app
 
-# Копируем файлы исходного кода
+# Копируем исходный код проекта
 COPY . .
 
-# Пошаговая настройка окружения без путаницы:
-# 1. Стираем старые конфликтующие файлы модулей
-# 2. Инициализируем модуль с явным именем go-service
-# 3. Принудительно скачиваем и регистрируем точный путь библиотеки валидации
-# 4. Финализируем структуру зависимостей через tidy
-RUN rm -f go.mod go.sum && \
-    go mod init go-service && \
-    go get ://github.com && \
-    go mod tidy
+# Принудительно очищаем старые конфиги и создаем чистый модуль
+RUN rm -f go.mod go.sum && go mod init go-service
 
-# Скачиваем кэш зависимостей и компилируем бинарный файл
-RUN go mod download && go build -o main .
+# Запускаем сборку — флаг -mod=mod заставит Go автоматически 
+# найти импорт gojsonschema в коде, скачать его и скомпилировать бинарник
+RUN go build -mod=mod -o main .
 
 FROM alpine:latest
 WORKDIR /app
-COPY --from=builder /go/src/go-service/main .
+COPY --from=builder /app/main .
 CMD ["./main"]
