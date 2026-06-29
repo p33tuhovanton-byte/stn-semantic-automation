@@ -1,16 +1,15 @@
 FROM golang:1.23-alpine AS builder
 WORKDIR /app
 
-# Копируем файлы проекта
+# Копируем исходный код проекта
 COPY . .
 
-# Принудительно удаляем старые модули (если они скопировались), 
-# создаем чистый package go-service и ставим верный импорт
+# Удаляем старые файлы, создаем пакет go-service и автоматически собираем зависимости
 RUN rm -f go.mod go.sum && \
     go mod init go-service && \
-    go get ://github.com
+    go mod tidy
 
-# Компилируем чистый бинарник
+# Компилируем проект
 RUN go build -o main .
 
 FROM alpine:latest
