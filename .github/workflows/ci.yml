@@ -17,7 +17,7 @@ jobs:
 
     # 2. Разворачиваем все 4 сервиса одной командой через Docker Compose
     - name: Build and start STN nodes
-      run: docker-compose up --build -d
+      run: docker compose up --build -d
 
     # 3. Ожидаем несколько секунд для полной инициализации серверов
     - name: Wait for services initialization
@@ -31,4 +31,4 @@ jobs:
       
     # 5. Останавливаем контейнеры после успешных тестов
     - name: Shutdown STN nodes
-      run: docker-compose down
+      run: docker compose down
