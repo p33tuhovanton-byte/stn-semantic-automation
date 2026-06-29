@@ -1,0 +1,30 @@
+version: '3.8'
+
+services:
+  python-node:
+    build: ./python-service
+    ports:
+      - "8000:8000"
+    volumes:
+      - ./schemas:/schemas
+
+  go-node:
+    build: ./go-service
+    ports:
+      - "8010:8010"
+    volumes:
+      - ./schemas:/schemas
+
+  rust-node:
+    build: ./rust-service
+    ports:
+      - "8020:8020"
+    volumes:
+      - ./schemas:/schemas
+
+  r-node:
+    build: ./r-service
+    ports:
+      - "8030:8030"
+    volumes:
+      - ./schemas:/schemas
