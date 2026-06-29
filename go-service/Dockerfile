@@ -4,15 +4,13 @@ WORKDIR /app
 # Копируем исходный код
 COPY . .
 
-# Принудительно очищаем старые файлы и создаем чистый базовый модуль (2 строки)
+# Очищаем старое окружение и создаем чистый модуль
 RUN rm -f go.mod go.sum && \
-    echo "module go-service" > go.mod && \
-    echo "go 1.23" >> go.mod
+    go mod init go-service && \
+    go id && \
+    go get ://github.com
 
-# Официальный и безопасный способ добавить зависимость в окружение
-RUN go get github.com && go mod download
-
-# Компилируем готовый проект
+# Компилируем проект
 RUN go build -o main .
 
 FROM alpine:latest
