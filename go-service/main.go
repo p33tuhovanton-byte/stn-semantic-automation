@@ -1,14 +1,13 @@
 package main
 
 import (
-	"encoding/json"
-	"fmt"
-	"io/ioutil"
-	"net/http"
-	"os"
-	"strings"
-
-
+	 "encoding/json"
+	 "fmt"
+	 "io/ioutil"
+	 "net/http"
+	 "os"
+	 "strings"
+  "://github.com"
 )
 
 // Структура для автоматического ответа
