@@ -7,6 +7,7 @@ import (
 	 "net/http"
 	 "os"
 	 "strings"
+  "github.com/xeipuuv/gojsonschema"
 )
 
 // Структура для автоматического ответа
