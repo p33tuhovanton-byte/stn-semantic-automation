@@ -4,11 +4,14 @@ WORKDIR /app
 # Копируем исходный код проекта
 COPY . .
 
-# Чистим окружение и инициализируем модуль БЕЗ двоеточий и слэшей
-RUN rm -f go.mod go.sum && \
-    go mod init ://github.com && \
-    go get ://github.com && \
-    go mod tidy
+# Сброс кэша сборщика (уникальный маркер времени сборки)
+RUN echo "Сборка от 2026-06-29"
+
+# Каждый шаг выполняем отдельно, чтобы Docker физически не смог подставить старый кэш
+RUN rm -f go.mod go.sum
+RUN go mod init ://github.com
+RUN go get ://github.com
+RUN go mod tidy
 
 # Компилируем проект
 RUN go build -o main .
