@@ -11,24 +11,24 @@ test-ecosystem:
 runs-on: ubuntu-latest
 
 steps:  
-\# 1. Скачиваем актуальный код из репозитория  
+\# 1. Скачиваем актуальный код проекта из репозитория GitHub  
 \- name: Checkout repository  
 uses: actions/checkout@v4
 
-\# 2. Разворачиваем все 4 сервиса через Docker Compose V2 (без дефиса)  
+\# 2. Разворачиваем все 4 сервиса одной командой через современный Docker Compose V2  
 \- name: Build and start STN nodes  
 run: docker compose up --build -d
 
-\# 3. Ожидаем инициализации серверов внутри контейнеров  
+\# 3. Ожидаем 15 секунд для полной инициализации серверов внутри контейнеров  
 \- name: Wait for services initialization  
 run: sleep 15
 
-\# 4. Запускаем мультиязычный Bash-скрипт тестирования  
+\# 4. Запускаем наш мультиязычный Bash-скрипт сквозного тестирования  
 \- name: Run automated validation tests (test\_all.sh)  
 run: |  
 chmod +x test\_all.sh  
 ./test\_all.sh
 
-\# 5. Останавливаем и очищаем контейнеры  
+\# 5. Корректно останавливаем и очищаем контейнеры после завершения тестов  
 \- name: Shutdown STN nodes  
 run: docker compose down
