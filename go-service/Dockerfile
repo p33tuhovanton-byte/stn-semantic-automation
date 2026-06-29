@@ -1,9 +1,14 @@
 FROM golang:1.23-alpine AS builder
 WORKDIR /app
-COPY go.mod ./
-# Скачиваем указанный в файле модуль напрямую
-RUN go download ://github.com v1.2.0 || go mod download
+
+# Инициализируем чистый модуль Go прямо внутри контейнера
+RUN go mod init go-service && \
+    go get ://github.com
+
+# Копируем исходный код
 COPY . .
+
+# Собираем исполняемый файл
 RUN go build -o main .
 
 FROM alpine:latest
