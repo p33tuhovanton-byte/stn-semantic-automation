@@ -9,8 +9,8 @@ RUN echo "Сборка ядра СТН"
 
 # Выполняем шаги строго без двоеточий
 RUN rm -f go.mod go.sum
-RUN go mod init go-service
-RUN go get ://github.com
+RUN go mod init go-services
+# go get ://github.com
 RUN go mod tidy
 
 # Компилируем проект
