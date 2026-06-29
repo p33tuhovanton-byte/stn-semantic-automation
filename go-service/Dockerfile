@@ -1,14 +1,16 @@
 FROM golang:1.23-alpine AS builder
 WORKDIR /app
 
-# Копируем всё ИСКЛЮЧАЯ go.mod и go.sum (они заблокированы в .dockerignore)
+# Копируем файлы проекта
 COPY . .
 
-# Инициализируем чистый модуль и автоматически добавляем нужную библиотеку
-RUN go mod init go-service && \
+# Принудительно удаляем старые модули (если они скопировались), 
+# создаем чистый package go-service и ставим верный импорт
+RUN rm -f go.mod go.sum && \
+    go mod init go-service && \
     go get ://github.com
 
-# Спокойно собираем проект
+# Компилируем чистый бинарник
 RUN go build -o main .
 
 FROM alpine:latest
