@@ -1,7 +1,10 @@
 FROM golang:1.23-alpine AS builder
 WORKDIR /app
-COPY go.mod go.sum ./
-RUN go mod download
+# Копируем только файл модуля
+COPY go.mod ./
+# Настраиваем зависимости и генерируем go.sum внутри контейнера
+RUN go mod tidy && go mod download
+# Копируем исходный код и собираем
 COPY . .
 RUN go build -o main .
 
