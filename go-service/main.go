@@ -9,7 +9,7 @@ import (
 	 "strings"
 
 
-  "://github.com"
+   "://github.com"
 )
 
 // Структура для автоматического ответа
