@@ -1,10 +1,10 @@
 FROM golang:1.23-alpine AS builder
 WORKDIR /app
-# Копируем ТОЛЬКО go.mod, файла go.sum здесь быть не должно!
 COPY go.mod ./
-RUN go mod tidy && go mod download
+RUN go mod tidy
 COPY . .
-RUN go build -o main .
+# Добавляем принудительный запуск сборки с автоматической загрузкой
+RUN go build -mod=mod -o main .
 
 FROM alpine:latest
 WORKDIR /app
